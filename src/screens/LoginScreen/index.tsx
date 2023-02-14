@@ -1,9 +1,13 @@
+import { Formik } from "formik";
+
 import { RootStackScreenProps } from "../../../types";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 
 import { Container, Title } from "./styles";
 import { BUTTON_TYPE } from "../../components/Button/types";
+import { INPUT_TYPE } from "../../components/Input/types";
+import { loginValidationSchema } from "./helper";
 
 export default function LoginScreen({
   navigation,
@@ -11,11 +15,53 @@ export default function LoginScreen({
   return (
     <Container>
       <Title>Login as a Seller</Title>
-      <Input name="Phonenumber" mb={20} />
-      <Input name="Password" />
-      <Button name="Login" />
+      <Formik
+        validationSchema={loginValidationSchema}
+        initialValues={{ phoneNumber: "", password: "" }}
+        onSubmit={(values) => console.log("\n\n values", values, "\n\n")}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          isValid,
+          touched,
+        }) => (
+          <>
+            <Input
+              name="phoneNumber"
+              label="Phone number"
+              mb={20}
+              value={values.phoneNumber}
+              onChangeText={handleChange("phoneNumber")}
+              onBlur={handleBlur("phoneNumber")}
+              error={
+                touched.phoneNumber && errors.phoneNumber
+                  ? errors.phoneNumber
+                  : undefined
+              }
+            />
+            <Input
+              name="password"
+              label="Password"
+              type={INPUT_TYPE.PASSWORD}
+              value={values.password}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              error={
+                touched.password && errors.password
+                  ? errors.password
+                  : undefined
+              }
+            />
+            <Button name="Log in" onPress={handleSubmit} disabled={!isValid} />
+          </>
+        )}
+      </Formik>
       <Button
-        name="Signup"
+        name="Sign up"
         buttonType={BUTTON_TYPE.LIGHT}
         mt={25}
         onPress={() => {

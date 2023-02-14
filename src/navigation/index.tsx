@@ -1,5 +1,4 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -9,19 +8,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import CreateProductScreen from "../screens/CreateProductScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import HomeScreen from "../screens/HomeScreen";
-import {
-  RootStackParamList,
-  RootTabParamList,
-  RootTabScreenProps,
-} from "../../types";
+import { RootStackParamList, RootStackScreenProps } from "../../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import theme from "../theme";
 
 export default function Navigation({
   colorScheme,
@@ -56,7 +50,23 @@ function RootNavigator() {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: "Oops!" }}
+        options={({ navigation }: RootStackScreenProps<"Home">) => ({
+          title: "Classifieds",
+          headerBackVisible: false,
+          headerStyle: {
+            backgroundColor: theme.colors.black,
+          },
+          headerRight: () => (
+            <Pressable onPress={() => navigation.navigate("createProduct")}>
+              <FontAwesome
+                name="plus"
+                size={25}
+                style={{ marginRight: 15 }}
+                color={theme.colors.primary}
+              />
+            </Pressable>
+          ),
+        })}
       />
       <Stack.Screen
         name="createProduct"
@@ -69,52 +79,3 @@ function RootNavigator() {
     </Stack.Navigator>
   );
 }
-
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
-
-// function BottomTabNavigator() {
-//   const colorScheme = useColorScheme();
-
-//   return (
-//     <BottomTab.Navigator
-//       initialRouteName="TabOne"
-//       screenOptions={{
-//         tabBarActiveTintColor: Colors[colorScheme].tint,
-//       }}>
-//       <BottomTab.Screen
-//         name="TabOne"
-//         component={TabOneScreen}
-//         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-//           title: 'Tab One',
-//           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-//           headerRight: () => (
-//             <Pressable
-//               onPress={() => navigation.navigate('Modal')}
-//               style={({ pressed }) => ({
-//                 opacity: pressed ? 0.5 : 1,
-//               })}>
-//               <FontAwesome
-//                 name="info-circle"
-//                 size={25}
-//                 color={Colors[colorScheme].text}
-//                 style={{ marginRight: 15 }}
-//               />
-//             </Pressable>
-//           ),
-//         })}
-//       />
-//       <BottomTab.Screen
-//         name="TabTwo"
-//         component={TabTwoScreen}
-//         options={{
-//           title: 'Tab Two',
-//           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-//         }}
-//       />
-//     </BottomTab.Navigator>
-//   );
-// }
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */

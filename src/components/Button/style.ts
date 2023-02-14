@@ -24,6 +24,7 @@ export const ButtonWrapper = styled(TouchableOpacity)<{
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: ${(props: any) => (props.disabled ? 0.5 : 1)};
 
   ${(props: any) =>
     props.buttonType === BUTTON_TYPE.LIGHT &&

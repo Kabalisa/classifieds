@@ -1,33 +1,88 @@
-import { StyleSheet } from "react-native";
+import { Formik } from "formik";
 
-import { Text, View } from "../../components/Themed";
+import { RootStackScreenProps } from "../../../types";
+import { Input } from "../../components/Input";
+import { Button } from "../../components/Button";
 
-export default function TabTwoScreen() {
+import { Container, Title } from "../LoginScreen/styles";
+import { BUTTON_TYPE } from "../../components/Button/types";
+import { INPUT_TYPE } from "../../components/Input/types";
+
+import { signupValidationSchema } from "./helper";
+
+export default function SingupScreen({
+  navigation,
+}: RootStackScreenProps<"Singup">) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
+    <Container>
+      <Title>Signup as a Seller</Title>
+      <Formik
+        validationSchema={signupValidationSchema}
+        initialValues={{ phoneNumber: "", password: "", confirmPassword: "" }}
+        onSubmit={(values) => console.log("\n\n values2", values, "\n\n")}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          isValid,
+          touched,
+        }) => (
+          <>
+            <Input
+              name="phoneNumber"
+              label="Phone number"
+              mb={20}
+              value={values.phoneNumber}
+              onChangeText={handleChange("phoneNumber")}
+              onBlur={handleBlur("phoneNumber")}
+              error={
+                touched.phoneNumber && errors.phoneNumber
+                  ? errors.phoneNumber
+                  : undefined
+              }
+            />
+            <Input
+              name="password"
+              label="Password"
+              mb={20}
+              type={INPUT_TYPE.PASSWORD}
+              value={values.password}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              error={
+                touched.password && errors.password
+                  ? errors.password
+                  : undefined
+              }
+            />
+            <Input
+              name="confirmPassword"
+              label="Confirm Password"
+              type={INPUT_TYPE.PASSWORD}
+              value={values.confirmPassword}
+              onChangeText={handleChange("confirmPassword")}
+              onBlur={handleBlur("confirmPassword")}
+              error={
+                touched.confirmPassword && errors.confirmPassword
+                  ? errors.confirmPassword
+                  : undefined
+              }
+            />
+            <Button name="Sign up" onPress={handleSubmit} disabled={!isValid} />
+          </>
+        )}
+      </Formik>
+      <Button
+        name="Log in"
+        buttonType={BUTTON_TYPE.LIGHT}
+        mt={25}
+        onPress={() => {
+          navigation.navigate("Login");
+        }}
       />
-    </View>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
