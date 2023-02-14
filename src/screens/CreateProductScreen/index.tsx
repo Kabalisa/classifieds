@@ -1,33 +1,27 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
+import { Formik } from "formik";
+
+import { Input } from "../../components/Input";
+import { Button } from "../../components/Button";
 
 import { Text, View } from "../../components/Themed";
+import { Container, Title } from "./styles";
 
-export default function TabTwoScreen() {
+export default function CreateProductScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>create product</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-    </View>
+    <ScrollView>
+      <Container>
+        <Title size={15} mb={15}>
+          Provide the information below:
+        </Title>
+      </Container>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 });

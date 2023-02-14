@@ -10,7 +10,7 @@ export default {
     black2: "#181818",
     black3: "rgba(0,0,0,0.95)",
     blue: "#5694e4",
-    background: "#111111",
+    background: "#1F1F1F",
     backgroundTransparent: "rgba(16,16,16,0.62)",
     border: "#606060",
     card: "#161616",

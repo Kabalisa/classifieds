@@ -51,7 +51,7 @@ function RootNavigator() {
         name="Home"
         component={HomeScreen}
         options={({ navigation }: RootStackScreenProps<"Home">) => ({
-          title: "Classifieds",
+          title: "Home",
           headerBackVisible: false,
           headerStyle: {
             backgroundColor: theme.colors.black,
@@ -71,7 +71,13 @@ function RootNavigator() {
       <Stack.Screen
         name="createProduct"
         component={CreateProductScreen}
-        options={{ title: "Oops!" }}
+        options={({ navigation }) => ({
+          title: "Create Product",
+          headerStyle: {
+            backgroundColor: theme.colors.black,
+          },
+          headerTintColor: theme.colors.white,
+        })}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="productDetails" component={ProductDetailsScreen} />

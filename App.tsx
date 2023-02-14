@@ -28,5 +28,6 @@ export default function App() {
 
 const Container = Styled.View`
 flex: 1;
-background-color: ${theme.colors.background};
+background-color: ${theme.colors.black};
+padding: 0px 15px;
 `;
