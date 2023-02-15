@@ -5,4 +5,5 @@ export type IconProps = {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
   size: number;
+  ml?: number;
 };

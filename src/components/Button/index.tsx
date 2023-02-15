@@ -1,9 +1,7 @@
 import React from "react";
 
 import { ButtonWrapper, ButtonLabel } from "./style";
-import { Icon } from "../Icon";
 import { ButtonProps, BUTTON_TYPE } from "./types";
-import theme from "../../theme";
 
 export const Button: React.FC<ButtonProps> = ({
   name,
@@ -13,6 +11,7 @@ export const Button: React.FC<ButtonProps> = ({
   mt = 15,
   buttonType = BUTTON_TYPE.DEFAULT,
   showIcon = false,
+  icon,
   ...rest
 }) => {
   return (
@@ -24,13 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...rest}
     >
       <ButtonLabel>{name}</ButtonLabel>
-      {showIcon ? (
-        <Icon
-          name="arrow-circle-right"
-          size={20}
-          color={theme.colors.primary}
-        />
-      ) : null}
+      {showIcon ? icon : null}
     </ButtonWrapper>
   );
 };

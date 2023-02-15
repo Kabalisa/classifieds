@@ -20,7 +20,7 @@ export const Label = styled.Text`
   color: ${theme.colors.white};
   font-style: normal;
   font-weight: 600;
-  margin-bottom: 6px
+  margin-bottom: 6px;
 `;
 
 export const ErrorText = styled.Text`
@@ -32,7 +32,7 @@ export const ErrorText = styled.Text`
   margin-top: 5px;
 `;
 
-export const InputField = styled(TextInput)`
+export const InputField = styled(TextInput)<{ height?: number }>`
   color: ${theme.colors.white};
   font-size: 13px;
   background-color: ${theme.colors.primary1};
@@ -40,6 +40,6 @@ export const InputField = styled(TextInput)`
   font-style: normal;
   font-weight: 500;
   width: 300px;
-  height: 33px;
+  height: ${(props: any) => props.height || 33}px;
   padding: 0px 8px;
 `;

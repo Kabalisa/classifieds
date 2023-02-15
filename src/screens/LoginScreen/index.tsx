@@ -3,11 +3,13 @@ import { Formik } from "formik";
 import { RootStackScreenProps } from "../../../types";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
+import { Icon } from "../../components/Icon";
 
 import { Container, Title } from "./styles";
 import { BUTTON_TYPE } from "../../components/Button/types";
 import { INPUT_TYPE } from "../../components/Input/types";
 import { loginValidationSchema } from "./helper";
+import theme from "../../theme";
 
 export default function LoginScreen({
   navigation,
@@ -73,6 +75,13 @@ export default function LoginScreen({
         buttonType={BUTTON_TYPE.OUTLINED}
         mt={50}
         showIcon={true}
+        icon={
+          <Icon
+            name="arrow-circle-right"
+            size={20}
+            color={theme.colors.primary}
+          />
+        }
         onPress={() => {
           navigation.navigate("Home");
         }}
