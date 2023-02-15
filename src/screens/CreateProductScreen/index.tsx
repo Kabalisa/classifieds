@@ -10,7 +10,7 @@ import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
-import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
@@ -38,6 +38,7 @@ export default function CreateProductScreen() {
   const [show, setShow] = useState<Boolean>(false);
   const [isDateSelected, setIsDateSelected] = useState<Boolean>(false);
   const [category, setCategory] = useState<string>("");
+  const [selectedLanguage, setSelectedLanguage] = useState("js");
 
   const { height, width } = useWindowDimensions();
 
@@ -115,8 +116,8 @@ export default function CreateProductScreen() {
   };
 
   return (
-    <ScrollView>
-      <Container>
+    <ScrollView style={{ flex: 1 }}>
+      <Container height={height}>
         <Title size={15} mb={15}>
           Provide the information below:
         </Title>
@@ -239,19 +240,26 @@ export default function CreateProductScreen() {
                   onPress={showDatepicker}
                 />
               )}
-              <RNPickerSelect
-                onValueChange={(value) => setCategory(value)}
-                items={[
-                  { label: "JavaScript", value: "JavaScript" },
-                  { label: "TypeScript", value: "TypeScript" },
-                  { label: "Python", value: "Python" },
-                  { label: "Java", value: "Java" },
-                  { label: "C++", value: "C++" },
-                  { label: "C", value: "C" },
-                ]}
-                value={category}
-                style={pickerSelectStyles}
-              />
+              <Title>Category</Title>
+              <Picker
+                selectedValue={selectedLanguage}
+                style={{
+                  fontSize: 16,
+                  paddingHorizontal: 10,
+                  borderRadius: 6,
+                  paddingRight: 30,
+                  width: 300,
+                  alignSelf: "center",
+                  marginTop: 10,
+                  backgroundColor: theme.colors.primary1,
+                }}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedLanguage(itemValue);
+                }}
+              >
+                <Picker.Item label="Java" value="java" />
+                <Picker.Item label="JavaScript" value="js" />
+              </Picker>
               <Button
                 name="Create"
                 onPress={handleSubmit}

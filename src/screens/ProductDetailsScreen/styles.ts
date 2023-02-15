@@ -7,6 +7,7 @@ import theme from "../../theme";
 export const Container = styled.View`
   flex: 1;
   padding: 15px 15px;
+  background-color: ${theme.colors.black};
 `;
 
 export const TextContainer = styled.View<{

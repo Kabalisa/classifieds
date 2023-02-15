@@ -14,7 +14,7 @@ export const Wrapper = styled(TouchableOpacity)<{
   margin-left: ${(props: any) => props.ml || 0}px;
   margin-right: ${(props: any) => props.mr || 0}px;
   display: flex;
-  flex-direction: colunm;
+  flex-direction: column;
   width: 100%;
   background-color: ${theme.colors.background};
   border-radius: 8px;

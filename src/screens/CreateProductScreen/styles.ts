@@ -4,10 +4,14 @@ import { TouchableOpacity } from "react-native";
 
 import theme from "../../theme";
 
-export const Container = styled.View`
+export const Container = styled.View<{
+  height: number;
+}>`
   flex: 1;
   align-items: center;
   padding: 15px 0px;
+  background-color: ${theme.colors.black};
+  height: ${(props: any) => props.height || 600}px;
 `;
 
 export const Title = styled.Text<{
