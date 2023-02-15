@@ -71,7 +71,7 @@ function RootNavigator() {
       <Stack.Screen
         name="createProduct"
         component={CreateProductScreen}
-        options={({ navigation }) => ({
+        options={() => ({
           title: "Create Product",
           headerStyle: {
             backgroundColor: theme.colors.black,
@@ -80,7 +80,17 @@ function RootNavigator() {
         })}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="productDetails" component={ProductDetailsScreen} />
+        <Stack.Screen
+          name="productDetails"
+          component={ProductDetailsScreen}
+          options={() => ({
+            title: "Product Details",
+            headerStyle: {
+              backgroundColor: theme.colors.black,
+            },
+            headerTintColor: theme.colors.white,
+          })}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );

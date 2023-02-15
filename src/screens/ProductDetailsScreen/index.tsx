@@ -1,21 +1,95 @@
-import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { Text, View } from "../../components/Themed";
+import { Button } from "../../components/Button";
+import { Icon } from "../../components/Icon";
+import { BUTTON_TYPE } from "../../components/Button/types";
+
+import theme from "../../theme";
+
+const image = require("../../assets/images/product.jpeg");
+
+import {
+  Container,
+  ProductImage,
+  Text,
+  TextContainer,
+  ButtonsContainer,
+} from "./styles";
 
 export default function ProductDetailsScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-    </View>
+    <Container>
+      <ProductImage source={image} resizeMode="cover" />
+      <TextContainer>
+        <Text mt={12} size={16} mr={12} color={theme.colors.primary}>
+          Name:
+        </Text>
+        <Text mt={12} size={16}>
+          Camera
+        </Text>
+      </TextContainer>
+      <TextContainer>
+        <Text mt={15} size={16} mr={12} color={theme.colors.primary}>
+          Price:
+        </Text>
+        <Text mt={15} size={16}>
+          150000 RWF
+        </Text>
+      </TextContainer>
+      <TextContainer>
+        <Text mt={15} size={16} mr={12} color={theme.colors.primary}>
+          Category:
+        </Text>
+        <Text mt={15} size={16}>
+          Technology
+        </Text>
+      </TextContainer>
+      <TextContainer direction="column">
+        <Text mt={15} size={16} mr={12} color={theme.colors.primary}>
+          Desrcription
+        </Text>
+        <Text mt={7} size={14} weight={400}>
+          lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
+          ipsumlorem ipsumlorem ipsum
+        </Text>
+      </TextContainer>
+      <ButtonsContainer>
+        <Button
+          name="Share on Facebook"
+          buttonType={BUTTON_TYPE.OUTLINED}
+          mt={20}
+          showIcon={true}
+          icon={
+            <Icon
+              name="facebook-square"
+              size={20}
+              color={theme.colors.blue}
+            />
+          }
+        />
+        <Button
+          name="Share on Whatsapp"
+          buttonType={BUTTON_TYPE.OUTLINED}
+          mt={5}
+          showIcon={true}
+          icon={<Icon name="whatsapp" size={20} color={theme.colors.darkGreen} />}
+        />
+      </ButtonsContainer>
+      <TextContainer>
+        <Text
+          mt={10}
+          size={14}
+          mr={12}
+          weight={500}
+          color={theme.colors.primary}
+        >
+          Manufacture date
+        </Text>
+        <Text mt={10} size={14} weight={500}>
+          15 Feb 23
+        </Text>
+      </TextContainer>
+    </Container>
   );
 }
 

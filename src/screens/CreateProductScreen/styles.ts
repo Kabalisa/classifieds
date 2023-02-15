@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native";
-import { Icon } from "../../components/Icon";
 
 import theme from "../../theme";
 
@@ -54,7 +53,7 @@ export const CameraButton = styled(TouchableOpacity)`
 export const ImageNameWrapper = styled.View`
   display: flex;
   flex-direction: row;
-  border: 1px solid #805B25;
+  border: 1px solid #805b25;
   padding: 8px;
   width: 300px;
   position: relative;
