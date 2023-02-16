@@ -1,6 +1,11 @@
 import * as yup from "yup";
 
 export const signupValidationSchema = yup.object().shape({
+  name: yup
+    .string()
+    .min(1, ({ min }) => `name must be at least ${min} numbers`)
+    .max(40, ({ max }) => `name can't exceed ${max} numbers`)
+    .required("name is Required"),
   phoneNumber: yup
     .string()
     .min(10, ({ min }) => `phoneNumber must be at least ${min} numbers`)
@@ -12,6 +17,6 @@ export const signupValidationSchema = yup.object().shape({
     .required("Password is required"),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password')], "Passwords don't match!")
+    .oneOf([yup.ref("password")], "Passwords don't match!")
     .required("confirmPassword is required"),
 });

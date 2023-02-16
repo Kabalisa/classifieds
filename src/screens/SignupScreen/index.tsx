@@ -18,7 +18,12 @@ export default function SingupScreen({
       <Title>Signup as a Seller</Title>
       <Formik
         validationSchema={signupValidationSchema}
-        initialValues={{ phoneNumber: "", password: "", confirmPassword: "" }}
+        initialValues={{
+          name: "",
+          phoneNumber: "",
+          password: "",
+          confirmPassword: "",
+        }}
         onSubmit={(values) => console.log("\n\n values2", values, "\n\n")}
       >
         {({
@@ -31,6 +36,15 @@ export default function SingupScreen({
           touched,
         }) => (
           <>
+            <Input
+              name="name"
+              label="Name"
+              mb={20}
+              value={values.name}
+              onChangeText={handleChange("name")}
+              onBlur={handleBlur("name")}
+              error={touched.name && errors.name ? errors.name : undefined}
+            />
             <Input
               name="phoneNumber"
               label="Phone number"

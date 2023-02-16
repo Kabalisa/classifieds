@@ -17,6 +17,7 @@ import { Button } from "../../components/Button";
 import { Icon } from "../../components/Icon";
 import { PhotoPreview } from "../../components/photoPreview";
 import { BUTTON_TYPE } from "../../components/Button/types";
+import { uploadImage } from "../../utils/uploadImage";
 
 import {
   Container,
@@ -34,6 +35,7 @@ export default function CreateProductScreen() {
   const [startCamera, setStartCamera] = useState<Boolean>(false);
   const [isPreview, setIsPreview] = useState<Boolean>(false);
   const [image, setImage] = useState<any>(null);
+  const [base64Image, setBase64Image] = useState<any>(null);
   const [date, setDate] = useState<Date>(new Date());
   const [show, setShow] = useState<Boolean>(false);
   const [isDateSelected, setIsDateSelected] = useState<Boolean>(false);
@@ -59,6 +61,7 @@ export default function CreateProductScreen() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
@@ -66,14 +69,16 @@ export default function CreateProductScreen() {
 
       setIsPreview(true);
       setImage(photo);
+      setBase64Image(`data:image/jpg;base64,${result.assets[0].base64}`);
     }
   };
 
   const handleTakePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync();
+    const photo = await camera.takePictureAsync({ base64: true });
     setIsPreview(true);
     setImage(photo);
+    setBase64Image(`data:image/jpg;base64,${photo.base64}`);
   };
 
   const handleRetake = () => {
@@ -123,7 +128,10 @@ export default function CreateProductScreen() {
         </Title>
         <Formik
           initialValues={{ name: "", price: "", descripiton: "" }}
-          onSubmit={(values) => console.log("\n\n values", values, "\n\n")}
+          onSubmit={async (values) => {
+            const result = await uploadImage(base64Image);
+            console.log("\n\n values2", result, "\n\n");
+          }}
         >
           {({
             handleChange,

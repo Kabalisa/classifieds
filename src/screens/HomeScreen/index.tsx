@@ -1,5 +1,7 @@
 import { StyleSheet, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../../store/store";
 import { ProductCard } from "../../components/ProductCard";
 import { RootStackScreenProps } from "../../../types";
 import { Container } from "./styles";
@@ -7,6 +9,9 @@ import { Container } from "./styles";
 export default function HomeScreen({
   navigation,
 }: RootStackScreenProps<"Home">) {
+  const app = useSelector((state: RootState) => state.app);
+  console.log("\n\n ==>>apppp", app);
+
   return (
     <ScrollView>
       <Container>
