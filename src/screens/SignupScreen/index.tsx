@@ -1,18 +1,50 @@
+import React, { useState } from "react";
 import { Formik } from "formik";
+import { useDispatch } from "react-redux";
 
 import { RootStackScreenProps } from "../../../types";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 
 import { Container, Title } from "../LoginScreen/styles";
+import { ErrorText } from "../../components/Input/style";
 import { BUTTON_TYPE } from "../../components/Button/types";
 import { INPUT_TYPE } from "../../components/Input/types";
 
 import { signupValidationSchema } from "./helper";
 
+import { setLoading, setSeller } from "../../store/slice";
+import { signupSeller, setToken } from "../../apis/auth";
+
 export default function SingupScreen({
   navigation,
 }: RootStackScreenProps<"Singup">) {
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+
+  const handleSignup = async (
+    name: string,
+    phoneNumber: string,
+    password: string
+  ) => {
+    try {
+      dispatch(setLoading(true));
+      setError("");
+      const result = await signupSeller(name, phoneNumber, password);
+      dispatch(setSeller(result.data.seller));
+      await setToken(result.data.jwt);
+      dispatch(setLoading(false));
+      navigation.navigate("Home");
+    } catch (error: any) {
+      dispatch(setLoading(false));
+      if (error.response && error.response.data && error.response.data.errors) {
+        setError(error.response.data.errors[0].message);
+      } else {
+        setError("something went wrong! try again");
+      }
+    }
+  };
+
   return (
     <Container>
       <Title>Signup as a Seller</Title>
@@ -24,7 +56,10 @@ export default function SingupScreen({
           password: "",
           confirmPassword: "",
         }}
-        onSubmit={(values) => console.log("\n\n values2", values, "\n\n")}
+        onSubmit={(values) => {
+          const { name, phoneNumber, password } = values;
+          handleSignup(name, phoneNumber, password);
+        }}
       >
         {({
           handleChange,
@@ -85,6 +120,7 @@ export default function SingupScreen({
                   : undefined
               }
             />
+            {error && <ErrorText>{error}</ErrorText>}
             <Button name="Sign up" onPress={handleSubmit} disabled={!isValid} />
           </>
         )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { RootStackScreenProps } from "../../../types";
 import { Input } from "../../components/Input";
@@ -14,7 +14,6 @@ import { INPUT_TYPE } from "../../components/Input/types";
 import { loginValidationSchema } from "./helper";
 import theme from "../../theme";
 
-import { RootState } from "../../store/store";
 import { setLoading, setSeller } from "../../store/slice";
 import {
   loginSeller,
@@ -28,7 +27,6 @@ export default function LoginScreen({
   navigation,
 }: RootStackScreenProps<"Login">) {
   const [error, setError] = useState("");
-  const app = useSelector((state: RootState) => state.app);
   const dispatch = useDispatch();
 
   const handleLogin = async (phoneNumber: string, password: string) => {
@@ -44,6 +42,8 @@ export default function LoginScreen({
       dispatch(setLoading(false));
       if (error.response && error.response.data && error.response.data.errors) {
         setError(error.response.data.errors[0].message);
+      } else {
+        setError("something went wrong! try again");
       }
     }
   };

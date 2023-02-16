@@ -12,6 +12,18 @@ export const currentUser = async (token: string) => {
   });
 };
 
+export const signupSeller = async (
+  name: string,
+  phoneNumber: string,
+  password: string
+) => {
+  return await AuthServer.post("/users/signup", {
+    name,
+    phoneNumber,
+    password,
+  });
+};
+
 export async function setToken(token: string) {
   try {
     return AsyncStorage.setItem("token", token);
