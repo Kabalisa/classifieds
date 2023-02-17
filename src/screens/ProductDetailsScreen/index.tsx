@@ -42,7 +42,8 @@ export default function ProductDetailsScreen() {
     try {
       const result = await Share.share({
         title: "Share Product",
-        message: `Check out this product named ${product.name} from classifieds`,
+        message: `Check out this product named ${product.name} from classifieds
+        https://tic-tac-to.herokuapp.com/api/v1/products/${product.id}`,
         url: `https://tic-tac-to.herokuapp.com/api/v1/products/${product.id}`,
       });
     } catch (error: any) {
