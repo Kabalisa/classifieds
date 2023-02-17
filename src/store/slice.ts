@@ -1,6 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+export const CategoryArr = [
+  "home",
+  "clothing",
+  "health",
+  "electronics",
+  "sports",
+  "agriculture",
+  "appliances",
+];
+
 export enum Category {
   home = "home",
   clothing = "clothing",
@@ -55,7 +65,19 @@ export const appSlice = createSlice({
       state.products = action.payload;
     },
     setProduct: (state, action: PayloadAction<Product>) => {
-      state.products = [...state.products, action.payload];
+      const newProducts = [action.payload, ...state.products];
+      const sortedProducts = newProducts.sort((a: any, b: any) => {
+        let A = a.name.toLowerCase();
+        let B = b.name.toLowerCase();
+        if (A < B) {
+          return -1;
+        }
+        if (A > B) {
+          return 1;
+        }
+        return 0;
+      });
+      state.products = sortedProducts;
     },
     setCurrentProduct: (state, action: PayloadAction<string>) => {
       state.currentProduct = action.payload;

@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import { Picker } from "@react-native-picker/picker";
+import { useDispatch } from "react-redux";
 
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
@@ -13,6 +14,12 @@ import { Icon } from "../../components/Icon";
 import { PhotoPreview } from "../../components/photoPreview";
 import { BUTTON_TYPE } from "../../components/Button/types";
 import { uploadImage } from "../../utils/uploadImage";
+import { setLoading, CategoryArr, setProduct } from "../../store/slice";
+import { productValidationSchema } from "./helper";
+import { createProduct } from "../../apis/products";
+import { getToken } from "../../apis/auth";
+import { RootStackScreenProps } from "../../../types";
+import { ErrorText } from "../../components/Input/style";
 
 import {
   Container,
@@ -26,16 +33,21 @@ import {
 } from "./styles";
 import theme from "../../theme";
 
-export default function CreateProductScreen() {
+export default function CreateProductScreen({
+  navigation,
+}: RootStackScreenProps<"createProduct">) {
   const [startCamera, setStartCamera] = useState<Boolean>(false);
   const [isPreview, setIsPreview] = useState<Boolean>(false);
   const [image, setImage] = useState<any>(null);
+  const [uploadedImage, setUploadedImage] = useState<any>(null);
   const [base64Image, setBase64Image] = useState<any>(null);
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | null>(null);
   const [show, setShow] = useState<Boolean>(false);
   const [isDateSelected, setIsDateSelected] = useState<Boolean>(false);
-  const [category, setCategory] = useState<string>("");
-  const [selectedLanguage, setSelectedLanguage] = useState("js");
+  const [category, setCategory] = useState<string>("home");
+  const [error, setError] = useState("");
+
+  const dispatch = useDispatch();
 
   const { height, width } = useWindowDimensions();
 
@@ -81,9 +93,56 @@ export default function CreateProductScreen() {
     setImage(null);
   };
 
-  const handleSetPhoto = () => {
-    setIsPreview(false);
-    setStartCamera(false);
+  const handleSetPhoto = async () => {
+    try {
+      dispatch(setLoading(true));
+      const result = await uploadImage(base64Image);
+      setUploadedImage(result);
+      setIsPreview(false);
+      setStartCamera(false);
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      setIsPreview(false);
+      setStartCamera(false);
+      setImage(null);
+    }
+  };
+
+  const handleCreateProduct = async (
+    name: string,
+    price: string,
+    description: string,
+    image: string,
+    manufactureDate: string,
+    category: string
+  ) => {
+    try {
+      const token = await getToken();
+      if (token) {
+        dispatch(setLoading(true));
+        const result = await createProduct(
+          name,
+          price,
+          description,
+          image,
+          manufactureDate,
+          category,
+          token
+        );
+        const { data } = result;
+        dispatch(setProduct(data.product));
+        navigation.navigate("Home");
+        dispatch(setLoading(false));
+      }
+    } catch (error: any) {
+      dispatch(setLoading(false));
+      if (error.response && error.response.data && error.response.data.errors) {
+        setError(error.response.data.errors[0].message);
+      } else {
+        setError("something went wrong! try again");
+      }
+    }
   };
 
   const removePhoto = () => {
@@ -122,10 +181,18 @@ export default function CreateProductScreen() {
           Provide the information below:
         </Title>
         <Formik
-          initialValues={{ name: "", price: "", descripiton: "" }}
+          validationSchema={productValidationSchema}
+          initialValues={{ name: "", price: "", description: "" }}
           onSubmit={async (values) => {
-            const result = await uploadImage(base64Image);
-            console.log("\n\n values2", result, "\n\n");
+            const formattedDate = date && dateValue(date);
+            handleCreateProduct(
+              values.name,
+              values.price,
+              values.description,
+              uploadedImage,
+              formattedDate!,
+              category
+            );
           }}
         >
           {({
@@ -157,18 +224,18 @@ export default function CreateProductScreen() {
                 error={touched.price && errors.price ? errors.price : undefined}
               />
               <Input
-                name="descripiton"
-                label="Short descripiton"
+                name="description"
+                label="Short description"
                 multiline
                 numberOfLines={4}
                 mb={20}
                 height={70}
-                value={values.descripiton}
-                onChangeText={handleChange("descripiton")}
-                onBlur={handleBlur("descripiton")}
+                value={values.description}
+                onChangeText={handleChange("description")}
+                onBlur={handleBlur("description")}
                 error={
-                  touched.descripiton && errors.descripiton
-                    ? errors.descripiton
+                  touched.description && errors.description
+                    ? errors.description
                     : undefined
                 }
               />
@@ -218,7 +285,9 @@ export default function CreateProductScreen() {
               )}
               {isDateSelected ? (
                 <ImageNameWrapper>
-                  <ImageName>Manufacture date: {dateValue(date)}</ImageName>
+                  <ImageName>
+                    Manufacture date: {date && dateValue(date)}
+                  </ImageName>
                   <CloseIcon onPress={removeDate}>
                     <Icon
                       name="window-close"
@@ -245,7 +314,7 @@ export default function CreateProductScreen() {
               )}
               <Title>Category</Title>
               <Picker
-                selectedValue={selectedLanguage}
+                selectedValue={category}
                 style={{
                   fontSize: 16,
                   paddingHorizontal: 10,
@@ -257,16 +326,18 @@ export default function CreateProductScreen() {
                   backgroundColor: theme.colors.primary1,
                 }}
                 onValueChange={(itemValue, itemIndex) => {
-                  setSelectedLanguage(itemValue);
+                  setCategory(itemValue);
                 }}
               >
-                <Picker.Item label="Java" value="java" />
-                <Picker.Item label="JavaScript" value="js" />
+                {CategoryArr.map((item, i) => (
+                  <Picker.Item key={i} label={item} value={item} />
+                ))}
               </Picker>
+              {error && <ErrorText>{error}</ErrorText>}
               <Button
                 name="Create"
                 onPress={handleSubmit}
-                disabled={!isValid}
+                disabled={!isValid || !uploadedImage || !date || !category}
               />
             </>
           )}
@@ -295,7 +366,7 @@ export default function CreateProductScreen() {
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date}
+            value={date || new Date()}
             mode="date"
             is24Hour={true}
             onChange={handleDateChange}

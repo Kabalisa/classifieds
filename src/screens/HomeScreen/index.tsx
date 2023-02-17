@@ -15,7 +15,7 @@ export default function HomeScreen({
   navigation,
 }: RootStackScreenProps<"Home">) {
   const app = useSelector((state: RootState) => state.app);
-  const { products } = app;
+  const { products, user } = app;
   const dispatch = useDispatch();
 
   const handleFetchProducts = async () => {
@@ -38,6 +38,17 @@ export default function HomeScreen({
   useEffect(() => {
     handleFetchProducts();
   }, []);
+
+  useEffect(() => {
+    navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+
+      if (user == null) {
+        console.log("bjbkvabjvas");
+        navigation.dispatch(e.data.action);
+      }
+    });
+  }, [navigation, user]);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.black }}>
