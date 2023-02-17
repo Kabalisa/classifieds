@@ -11,3 +11,18 @@
 - The list should be sorted alphabetically.
 - The customer should be able to select a product and view details
 - The customer should be able to share the product link via Whatsapp or FB
+
+## Tools used
+
+- React Native
+- expo
+- Redux toolkit
+- Formik
+- Yup
+
+## installation
+
+- git clone https://github.com/Kabalisa/classifieds.git
+- cd classifieds && npm i
+- npm start or npm run ios or npm run android
+- you can then scan the qrcode to see the app or it will open in a emulator or simulator
