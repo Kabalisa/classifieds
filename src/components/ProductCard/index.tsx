@@ -7,10 +7,15 @@ import { ProductCardProps } from "./types";
 
 import theme from "../../theme";
 
-export const ProductCard: React.FC<ProductCardProps> = ({ mt }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  mt,
+  onPress,
+}) => {
   const navigation = useNavigation();
 
-  const image = require("../../assets/images/product.jpeg");
+  const { image, name, price, manufactureDate } = product;
+
   return (
     <View
       style={{
@@ -22,16 +27,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ mt }) => {
         marginTop: mt || 0,
       }}
     >
-      <Wrapper onPress={() => navigation.navigate("productDetails")}>
-        <ProductImage source={image} resizeMode="cover" />
+      <Wrapper
+        onPress={() => {
+          onPress();
+          navigation.navigate("productDetails");
+        }}
+      >
+        <ProductImage source={{ uri: image }} resizeMode="cover" />
         <Label size={16} mt={7} mb={7}>
-          Camera
+          {name}
         </Label>
         <Label size={14} mb={7} weight={600} color={theme.colors.primary}>
-          150000 RWF
+          {price} RWF
         </Label>
         <Label size={14} weight={300}>
-          Manufacture date: 14/2/2023
+          Manufacture date: {manufactureDate}
         </Label>
       </Wrapper>
     </View>

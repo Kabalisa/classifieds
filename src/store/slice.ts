@@ -16,7 +16,8 @@ interface User {
   phoneNumber: string;
 }
 
-interface Product {
+export interface Product {
+  id: string;
   name: string;
   price: string;
   description: string;
@@ -30,12 +31,14 @@ export interface AppState {
   user: User | null;
   products: Product[];
   loading: Boolean;
+  currentProduct: string | null;
 }
 
 const initialState: AppState = {
   user: null,
   products: [],
   loading: false,
+  currentProduct: null,
 };
 
 export const appSlice = createSlice({
@@ -45,12 +48,27 @@ export const appSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setSeller: (state, action: PayloadAction<User>) => {
+    setSeller: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
+    },
+    setProducts: (state, action: PayloadAction<Product[]>) => {
+      state.products = action.payload;
+    },
+    setProduct: (state, action: PayloadAction<Product>) => {
+      state.products = [...state.products, action.payload];
+    },
+    setCurrentProduct: (state, action: PayloadAction<string>) => {
+      state.currentProduct = action.payload;
     },
   },
 });
 
-export const { setLoading, setSeller } = appSlice.actions;
+export const {
+  setLoading,
+  setSeller,
+  setProducts,
+  setProduct,
+  setCurrentProduct,
+} = appSlice.actions;
 
 export default appSlice.reducer;

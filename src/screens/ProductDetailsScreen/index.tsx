@@ -1,8 +1,11 @@
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../../store/store";
 import { Button } from "../../components/Button";
 import { Icon } from "../../components/Icon";
 import { BUTTON_TYPE } from "../../components/Button/types";
+import { Product } from "../../store/slice";
 
 import theme from "../../theme";
 
@@ -17,15 +20,34 @@ import {
 } from "./styles";
 
 export default function ProductDetailsScreen() {
+  const [product, setProduct] = useState<Product | null>(null);
+  const app = useSelector((state: RootState) => state.app);
+
+  useEffect(() => {
+    const currentProduct = app.products.find(
+      (product) => product.id === app.currentProduct
+    );
+
+    currentProduct && setProduct(currentProduct);
+  }, []);
+
+  if (product === null) {
+    return (
+      <Container>
+        <Text>No Product</Text>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      <ProductImage source={image} resizeMode="cover" />
+      <ProductImage source={{ uri: product.image }} resizeMode="cover" />
       <TextContainer>
         <Text mt={12} size={16} mr={12} color={theme.colors.primary}>
           Name:
         </Text>
         <Text mt={12} size={16}>
-          Camera
+          {product.name}
         </Text>
       </TextContainer>
       <TextContainer>
@@ -33,7 +55,7 @@ export default function ProductDetailsScreen() {
           Price:
         </Text>
         <Text mt={15} size={16}>
-          150000 RWF
+          {product.price} RWF
         </Text>
       </TextContainer>
       <TextContainer>
@@ -41,7 +63,7 @@ export default function ProductDetailsScreen() {
           Category:
         </Text>
         <Text mt={15} size={16}>
-          Technology
+          {product.category}
         </Text>
       </TextContainer>
       <TextContainer direction="column">
@@ -49,8 +71,7 @@ export default function ProductDetailsScreen() {
           Desrcription
         </Text>
         <Text mt={7} size={14} weight={400}>
-          lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsumlorem ipsumlorem ipsum
+          {product.description}
         </Text>
       </TextContainer>
       <ButtonsContainer>
@@ -60,11 +81,7 @@ export default function ProductDetailsScreen() {
           mt={20}
           showIcon={true}
           icon={
-            <Icon
-              name="facebook-square"
-              size={20}
-              color={theme.colors.blue}
-            />
+            <Icon name="facebook-square" size={20} color={theme.colors.blue} />
           }
         />
         <Button
@@ -72,7 +89,9 @@ export default function ProductDetailsScreen() {
           buttonType={BUTTON_TYPE.OUTLINED}
           mt={5}
           showIcon={true}
-          icon={<Icon name="whatsapp" size={20} color={theme.colors.darkGreen} />}
+          icon={
+            <Icon name="whatsapp" size={20} color={theme.colors.darkGreen} />
+          }
         />
       </ButtonsContainer>
       <TextContainer>
@@ -86,26 +105,9 @@ export default function ProductDetailsScreen() {
           Manufacture date
         </Text>
         <Text mt={10} size={14} weight={500}>
-          15 Feb 23
+          {product.manufactureDate}
         </Text>
       </TextContainer>
     </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

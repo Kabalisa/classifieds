@@ -1,40 +1,61 @@
-import { StyleSheet, ScrollView } from "react-native";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { ScrollView } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 
 import { RootState } from "../../store/store";
 import { ProductCard } from "../../components/ProductCard";
 import { RootStackScreenProps } from "../../../types";
-import { Container } from "./styles";
+import { Container, Wrapper, Text } from "./styles";
+
+import { getProducts } from "../../apis/products";
+import { setProducts, setLoading, setCurrentProduct } from "../../store/slice";
+import theme from "../../theme";
 
 export default function HomeScreen({
   navigation,
 }: RootStackScreenProps<"Home">) {
   const app = useSelector((state: RootState) => state.app);
-  console.log("\n\n ==>>apppp", app);
+  const { products } = app;
+  const dispatch = useDispatch();
+
+  const handleFetchProducts = async () => {
+    try {
+      dispatch(setLoading(true));
+      const result = await getProducts();
+      const { data } = result;
+      dispatch(setProducts(data.products));
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      dispatch(setProducts([]));
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleCurrentProduct = (id: string) => {
+    dispatch(setCurrentProduct(id));
+  };
+
+  useEffect(() => {
+    handleFetchProducts();
+  }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.black }}>
       <Container>
-        <ProductCard />
-        <ProductCard mt={20} />
-        <ProductCard mt={20} />
-        <ProductCard mt={20} />
+        {products.map((product, i) => (
+          <ProductCard
+            product={product}
+            key={i}
+            mt={i && 20}
+            onPress={() => handleCurrentProduct(product.id)}
+          />
+        ))}
+        {!products.length && (
+          <Wrapper>
+            <Text>No products available</Text>
+          </Wrapper>
+        )}
       </Container>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: "#2e78b7",
-  },
-});

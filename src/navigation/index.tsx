@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -7,6 +7,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import CreateProductScreen from "../screens/CreateProductScreen";
@@ -16,6 +17,10 @@ import HomeScreen from "../screens/HomeScreen";
 import { RootStackParamList, RootStackScreenProps } from "../../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import theme from "../theme";
+import { RootState } from "../store/store";
+import { Text } from "../screens/ProductDetailsScreen/styles";
+import { setLoading, setSeller } from "../store/slice";
+import { removeToken } from "../apis/auth";
 
 export default function Navigation({
   colorScheme,
@@ -35,6 +40,22 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const app = useSelector((state: RootState) => state.app);
+  const dispatch = useDispatch();
+  const { user } = app;
+
+  const handleLogout = async (navigate: any) => {
+    try {
+      dispatch(setLoading(true));
+      await removeToken();
+      dispatch(setSeller(null));
+      dispatch(setLoading(false));
+      navigate();
+    } catch (error) {
+      dispatch(setLoading(false));
+    }
+  };
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -56,16 +77,36 @@ function RootNavigator() {
           headerStyle: {
             backgroundColor: theme.colors.black,
           },
-          headerRight: () => (
-            <Pressable onPress={() => navigation.navigate("createProduct")}>
-              <FontAwesome
-                name="plus"
-                size={25}
-                style={{ marginRight: 15 }}
-                color={theme.colors.primary}
-              />
-            </Pressable>
-          ),
+          headerLeft: () =>
+            user === null ? null : (
+              <Pressable
+                onPress={() => handleLogout(navigation.navigate("Login"))}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <MaterialIcons
+                  name="logout"
+                  size={20}
+                  style={{ marginRight: 5 }}
+                  color={theme.colors.primary}
+                />
+                <Text>Log out</Text>
+              </Pressable>
+            ),
+          headerRight: () =>
+            user === null ? null : (
+              <Pressable onPress={() => navigation.navigate("createProduct")}>
+                <FontAwesome
+                  name="plus"
+                  size={25}
+                  style={{ marginRight: 15 }}
+                  color={theme.colors.primary}
+                />
+              </Pressable>
+            ),
         })}
       />
       <Stack.Screen

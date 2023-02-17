@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  ScrollView,
-  Alert,
-  useWindowDimensions,
-  StyleSheet,
-} from "react-native";
+import { ScrollView, Alert, useWindowDimensions } from "react-native";
 import { Formik } from "formik";
 import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
@@ -310,32 +305,3 @@ export default function CreateProductScreen() {
     </ScrollView>
   );
 }
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 4,
-    color: theme.colors.white,
-    paddingRight: 30,
-    width: 300,
-    alignSelf: "center",
-    marginTop: 10,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: theme.colors.primary,
-    borderRadius: 8,
-    color: theme.colors.white,
-    paddingRight: 30,
-    width: 300,
-    alignSelf: "center",
-    marginTop: 10,
-  },
-});
