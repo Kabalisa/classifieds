@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Share, Alert } from "react-native";
 
 import { RootState } from "../../store/store";
 import { Button } from "../../components/Button";
@@ -8,8 +9,6 @@ import { BUTTON_TYPE } from "../../components/Button/types";
 import { Product } from "../../store/slice";
 
 import theme from "../../theme";
-
-const image = require("../../assets/images/product.jpeg");
 
 import {
   Container,
@@ -38,6 +37,18 @@ export default function ProductDetailsScreen() {
       </Container>
     );
   }
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        title: "Share Product",
+        message: `Check out this product named ${product.name} from classifieds`,
+        url: `https://tic-tac-to.herokuapp.com/api/v1/products/${product.id}`,
+      });
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
 
   return (
     <Container>
@@ -76,22 +87,14 @@ export default function ProductDetailsScreen() {
       </TextContainer>
       <ButtonsContainer>
         <Button
-          name="Share on Facebook"
+          name="Share Product"
           buttonType={BUTTON_TYPE.OUTLINED}
           mt={20}
           showIcon={true}
           icon={
-            <Icon name="facebook-square" size={20} color={theme.colors.blue} />
+            <Icon name="share-alt" size={20} color={theme.colors.primary} />
           }
-        />
-        <Button
-          name="Share on Whatsapp"
-          buttonType={BUTTON_TYPE.OUTLINED}
-          mt={5}
-          showIcon={true}
-          icon={
-            <Icon name="whatsapp" size={20} color={theme.colors.darkGreen} />
-          }
+          onPress={() => handleShare()}
         />
       </ButtonsContainer>
       <TextContainer>

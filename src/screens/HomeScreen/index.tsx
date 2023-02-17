@@ -44,7 +44,6 @@ export default function HomeScreen({
       e.preventDefault();
 
       if (user == null) {
-        console.log("bjbkvabjvas");
         navigation.dispatch(e.data.action);
       }
     });
